@@ -39,6 +39,8 @@ class Source(Base):
 
         self.gocode_binary = \
             expand(vars.get('deoplete#sources#go#gocode_binary', ''))
+        self.gocode_flags = \
+            vars.get('deoplete#sources#go#gocode_flags', [])
         self.package_dot = \
             vars.get('deoplete#sources#go#package_dot', False)
         self.sort_class = \
@@ -51,8 +53,6 @@ class Source(Base):
             vars.get('deoplete#sources#go#goos', '')
         self.goarch = \
             vars.get('deoplete#sources#go#goarch', '')
-        self.sock = \
-            vars.get('deoplete#sources#go#gocode_sock', '')
         self.cgo = \
             vars.get('deoplete#sources#go#cgo', False)
 
@@ -210,10 +210,9 @@ class Source(Base):
         if not gocode:
             return []
         args = [gocode, '-f=json']
-        # basically, '-sock' option for mdempsky/gocode.
-        # probably meaningless in nsf/gocode that already run the rpc server
-        if self.sock != '' and self.sock in ['unix', 'tcp', 'none']:
-            args.append('-sock={}'.format(self.sock))
+
+        if self.gocode_flags is not None:
+            args += self.gocode_flags
 
         args += ['autocomplete', bufname, str(offset)]
 
