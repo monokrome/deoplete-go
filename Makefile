@@ -37,6 +37,11 @@ $(TARGET): rplugin/python3/deoplete/ujson/.git
 	mv "$(CURRENT)/build/ujson."*".so" "$(TARGET)"
 
 
+CLANG_VERSION ?= 5.0
+rplugin/python3/deoplete/clang:
+	@mkdir -p rplugin/python3/deoplete/clang
+	curl -sSL https://files.pythonhosted.org/packages/32/12/e17c1220f8ca587add2e076ebb28b6c4551fcc730e3c69a5f49679ad28e9/clang-${CLANG_VERSION}.tar.gz | tar xzf - --strip-components=1 -C rplugin/python3/deoplete/clang
+
 data/stdlib-$(GO_VERSION)_$(GOOS)_$(GOARCH).txt:
 	go tool api -contexts $(GOOS)-$(GOARCH)-cgo | sed -e s/,//g | awk '{print $$2}' | uniq > ./data/stdlib-$(GO_VERSION)_$(GOOS)_$(GOARCH).txt
 	@for pkg in $(PACKAGE) ; do \
